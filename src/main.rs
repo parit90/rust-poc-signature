@@ -146,14 +146,14 @@ fn keys_gen() {
     let mut rng = rand::thread_rng();
     let bits = 2048;
     let priv_key = RsaPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
-    let pem = priv_key.write_pkcs8_pem_file("/Users/sahilpant/Desktop/Signature_Server/rust-poc-signature/priv_key.pem",LineEnding::LF).ok();
+    let pem = priv_key.write_pkcs8_pem_file("",LineEnding::LF).ok();
     let pub_key = RsaPublicKey::from(&priv_key);
-    let pem2 = pub_key.write_public_key_pem_file("/Users/sahilpant/Desktop/Signature_Server/rust-poc-signature/pub_key.pem",LineEnding::LF).ok();
+    let pem2 = pub_key.write_public_key_pem_file("../pub_key.pem",LineEnding::LF).ok();
 }
 
 fn encrypt(data:&[u8]) -> Vec<u8> {
     let mut rng = rand::thread_rng();
-    let pub_key: RsaPublicKey =  RsaPublicKey::read_public_key_pem_file("/Users/sahilpant/Desktop/Signature_Server/rust-poc-signature/pub_key.pem").unwrap();
+    let pub_key: RsaPublicKey =  RsaPublicKey::read_public_key_pem_file("pub_key.pem").unwrap();
     let enc_data = pub_key.encrypt(&mut rng, Pkcs1v15Encrypt, &data[..]).expect("failed to encrypt");
     enc_data
 }
@@ -162,7 +162,7 @@ fn encrypt(data:&[u8]) -> Vec<u8> {
 // assert_ne!(&data[..], &enc_data[..]);
 fn Decrypt(data:&[u8],enc_data:Vec<u8>) {
     let mut rng = rand::thread_rng();
-    let priv_key: RsaPrivateKey =  RsaPrivateKey::read_pkcs8_pem_file("/Users/sahilpant/Desktop/Signature_Server/rust-poc-signature/priv_key.pem").unwrap();
+    let priv_key: RsaPrivateKey =  RsaPrivateKey::read_pkcs8_pem_file("priv_key.pem").unwrap();
     let dec_data = priv_key.decrypt(Pkcs1v15Encrypt, &enc_data).expect("failed to decrypt");
     println!("{:?}",dec_data);
     println!("{:?}",data);
